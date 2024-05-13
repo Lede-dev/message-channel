@@ -49,6 +49,7 @@ public class MsgchServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        server.getChannels().removeInactive();
         cause.printStackTrace();
     }
 }

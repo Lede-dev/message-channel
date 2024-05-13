@@ -1,5 +1,6 @@
 package net.ledestudio.msgch.server;
 
+import com.google.common.collect.Sets;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +20,16 @@ public class MsgchChannelGroup extends ConcurrentHashMap<UUID, Channel> {
     }
 
     public void remove(@Nullable Channel channel) {
-        for (Channel value : values()) {
+        for (Channel value : Sets.newHashSet(values())) {
             if (value.equals(channel)) {
+                remove(value);
+            }
+        }
+    }
+
+    public void removeInactive() {
+        for (Channel value : Sets.newHashSet(values())) {
+            if (!value.isActive()) {
                 remove(value);
             }
         }

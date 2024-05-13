@@ -109,6 +109,10 @@ public class MsgchServer {
         channels.remove(channel);
     }
 
+    MsgchChannelGroup getChannels() {
+        return channels;
+    }
+
     public void writeAndFlush(@NotNull Packet packet) {
         final ByteBuf buf = Unpooled.buffer();
         final int id = packetRegistry.writePacketToByteBuf(packet, buf);
