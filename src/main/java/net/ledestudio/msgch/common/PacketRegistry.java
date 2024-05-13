@@ -17,17 +17,21 @@ public class PacketRegistry {
 
     PacketRegistry() {}
 
-    public void register(@Range(from = 0, to = Integer.MAX_VALUE) int id, @NotNull Packet packet) {
+    public void register(@Range(from = 0, to = Integer.MAX_VALUE) int id, @NotNull Class<? extends Packet> type) {
         try {
-            final Class<? extends Packet> clazz = packet.getClass();
-            final Constructor<? extends Packet> constructor = clazz.getConstructor(ByteBuf.class);
+            final Constructor<? extends Packet> constructor = type.getConstructor(ByteBuf.class);
 
-            idTypeMap.put(id, clazz);
-            typeIdMap.put(clazz, id);
-            constructorMap.put(clazz, constructor);
+            idTypeMap.put(id, type);
+            typeIdMap.put(type, id);
+            constructorMap.put(type, constructor);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
+    }
+
+    public void register(@Range(from = 0, to = Integer.MAX_VALUE) int id, @NotNull Packet packet) {
+        final Class<? extends Packet> type = packet.getClass();
+        register(id, type);
     }
 
     public void unregister(@Range(from = 0, to = Integer.MAX_VALUE) int id) {
